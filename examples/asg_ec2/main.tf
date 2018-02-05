@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = "${var.region}"
 
   # Make it faster by skipping something
   skip_get_ec2_platforms      = true
@@ -12,16 +12,18 @@ provider "aws" {
 ##############################################################
 # Data sources to get VPC, subnets and security group details
 ##############################################################
-data "aws_vpc" "default" {
-  default = true
+data "aws_vpc" "vpc" {
+  tags {
+    Env = "${var.environment}"
+  }
 }
 
 data "aws_subnet_ids" "all" {
-  vpc_id = "${data.aws_vpc.default.id}"
+  vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
 data "aws_security_group" "default" {
-  vpc_id = "${data.aws_vpc.default.id}"
+  vpc_id = "${data.aws_vpc.vpc.id}"
   name   = "default"
 }
 
@@ -57,7 +59,8 @@ module "example" {
   #
   # launch_configuration = "my-existing-launch-configuration" # Use the existing launch configuration
   # create_lc = false # disables creation of launch configuration
-  lc_name = "example-lc"
+  #lc_name = "example-lc"
+  environment   = "${var.environment}"
 
   image_id                    = "${data.aws_ami.amazon_linux.id}"
   instance_type               = "t2.micro"
@@ -82,7 +85,7 @@ module "example" {
   ]
 
   # Auto scaling group
-  asg_name                  = "example-asg"
+  #asg_name                  = "example-asg"
   vpc_zone_identifier       = ["${data.aws_subnet_ids.all.ids}"]
   health_check_type         = "EC2"
   min_size                  = 0
@@ -90,12 +93,7 @@ module "example" {
   desired_capacity          = 1
   wait_for_capacity_timeout = 0
 
-  tags = [
-    {
-      key                 = "Environment"
-      value               = "dev"
-      propagate_at_launch = true
-    },
+  tags_ag = [
     {
       key                 = "Project"
       value               = "megasecret"

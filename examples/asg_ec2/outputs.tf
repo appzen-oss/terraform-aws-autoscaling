@@ -1,11 +1,11 @@
 # Launch configuration
-output "this_launch_configuration_id" {
+output "launch_configuration_id" {
   description = "The ID of the launch configuration"
-  value       = "${module.example.this_launch_configuration_id}"
+  value       = "${module.example.launch_configuration_id}"
 }
 
 # Autoscaling group
-output "this_autoscaling_group_id" {
+output "autoscaling_group_id" {
   description = "The autoscaling group id"
-  value       = "${module.example.this_autoscaling_group_id}"
+  value       = "${module.example.autoscaling_group_id}"
 }
