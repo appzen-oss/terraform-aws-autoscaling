@@ -9,10 +9,17 @@ jobs:
       - checkout
       - run:
           name: Validate tf files (terraform validate)
-          command: find . -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (terraform validate -check-variables=false "$m" && echo "√ $m") || exit 1 ; done
+          command: |
+              find . -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (terraform validate -check-variables=false "$m" && echo "√ $m") || exit 1 ; done
       - run:
           name: check if all tf files are formatted (terraform fmt)
-          command: if [ `terraform fmt | wc -c` -ne 0 ]; then echo "Some terraform files need be formatted, run 'terraform fmt' to fix"; exit 1; fi
+          command: |
+              if [ `terraform fmt --list=true -diff=true -write=false | tee format-issues | wc -c` -ne 0 ]; then
+                echo "Some terraform files need be formatted, run 'terraform fmt' to fix"
+                echo "Formatting issues:"
+                cat format-issues
+                exit 1
+              fi
       - run:
           name: "Install: tflint"
           command: |
@@ -24,7 +31,9 @@ jobs:
               install tflint /usr/local/tflint/bin
       - run:
           name: "tflint check"
-          command: /usr/local/tflint/bin/tflint
+          command: |
+              terraform init
+              /usr/local/tflint/bin/tflint
 
 workflows:
   version: 2
