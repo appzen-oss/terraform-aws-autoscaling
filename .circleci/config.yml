@@ -29,15 +29,15 @@ jobs:
               mkdir -p /usr/local/tflint/bin
               export PATH=/usr/local/tflint/bin:$PATH
               install tflint /usr/local/tflint/bin
-      - run:
-          # Not supporting modules from registry ??
-          name: "Check: tflint"
-          command: |
-              echo "Initializing terraform..."
-              terraform init -input=false
-              echo "Running tflint..."
-              /usr/local/tflint/bin/tflint --version
-              /usr/local/tflint/bin/tflint
+      #- run:
+      #    # Not supporting modules from registry ?? v0.5.4
+      #    name: "Check: tflint"
+      #    command: |
+      #        echo "Initializing terraform..."
+      #        terraform init -input=false
+      #        echo "Running tflint..."
+      #        /usr/local/tflint/bin/tflint --version
+      #        /usr/local/tflint/bin/tflint
 
 workflows:
   version: 2
