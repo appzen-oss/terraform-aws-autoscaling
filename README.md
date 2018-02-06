@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/devops-workflow/terraform-aws-autoscaling/tree/master.svg?style=svg)](https://circleci.com/gh/devops-workflow/terraform-aws-autoscaling/tree/master)
+
 AWS Auto Scaling Group (ASG) Terraform module
 ================================================
 
