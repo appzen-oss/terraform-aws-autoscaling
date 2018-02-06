@@ -1,4 +1,3 @@
-
 ###
 ### Terraform AWS Autoscaling
 ###
@@ -52,12 +51,15 @@ resource "aws_launch_configuration" "this" {
   ebs_optimized               = "${var.ebs_optimized}"
   ephemeral_block_device      = "${var.ephemeral_block_device}"
   root_block_device           = "${var.root_block_device}"
+
   lifecycle {
     create_before_destroy = true
   }
+
   #spot_price      = "${var.spot_price == "0" ? "" : var.spot_price}"
   # spot_price                  = "${var.spot_price}"  // placement_tenancy does not work with spot_price
 }
+
 /*
 # Attempt at improving the issue where it cannot delete the old LC on changes
 resource "null_resource" "delay" {
@@ -78,16 +80,17 @@ resource "null_resource" "delay" {
 # Autoscaling group
 ####################
 resource "aws_autoscaling_group" "this" {
-  /*depends_on = [
-    "null_resource.delay"
-  ]*/
-  count                 = "${module.enabled.value}"
-  name_prefix           = "${coalesce(var.asg_name, module.label.id)}-"
-  launch_configuration  = "${var.launch_configuration == "" ? element(aws_launch_configuration.this.*.name, 0) : var.launch_configuration}"
-  vpc_zone_identifier   = ["${var.vpc_zone_identifier}"]
-  max_size              = "${var.max_size}"
-  min_size              = "${var.min_size}"
-  desired_capacity      = "${var.desired_capacity}"
+  #depends_on = [
+  #  "null_resource.delay"
+  #]
+  count = "${module.enabled.value}"
+
+  name_prefix          = "${coalesce(var.asg_name, module.label.id)}-"
+  launch_configuration = "${var.launch_configuration == "" ? element(aws_launch_configuration.this.*.name, 0) : var.launch_configuration}"
+  vpc_zone_identifier  = ["${var.vpc_zone_identifier}"]
+  max_size             = "${var.max_size}"
+  min_size             = "${var.min_size}"
+  desired_capacity     = "${var.desired_capacity}"
 
   load_balancers            = ["${var.load_balancers}"]
   health_check_grace_period = "${var.health_check_grace_period}"
@@ -115,6 +118,7 @@ resource "aws_autoscaling_group" "this" {
     ),
     var.tags_ag
   )}"]
+
   lifecycle {
     create_before_destroy = true
   }
