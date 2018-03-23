@@ -1,4 +1,11 @@
+# TODO: Add mem alarms/policies - Look at ecs_cluster
+# Enable either one/both/none
+# Need something that will work well for ECS
+
 // CloudWatch Alarms
+# TODO:  look at changing to a submodule
+#  one module do high/low alarm and policies - Call for cpu, mem
+#  ?? modules for single alarm and policy
 resource "aws_cloudwatch_metric_alarm" "high_cpu" {
   count               = "${var.enable_scaling_policies}"
   alarm_name          = "${title("ec2-asg-${var.name}-high-cpu-utilization")}"
@@ -36,6 +43,7 @@ resource "aws_cloudwatch_metric_alarm" "low_cpu" {
 }
 
 // Auto Scaling Policy
+# TODO:  look at changing to a submodule
 resource "aws_autoscaling_policy" "cpu_scaling_out" {
   count                  = "${var.enable_scaling_policies}"
   name                   = "cpu-scaling-out"

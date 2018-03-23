@@ -15,7 +15,7 @@ Usage
 
 ```hcl
 module "asg" {
-  source = "terraform-aws-modules/autoscaling/aws"
+  source = "devops-workflow/autoscaling/aws"
 
   name = "service"
 

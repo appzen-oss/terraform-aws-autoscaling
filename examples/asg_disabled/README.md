@@ -1,9 +1,9 @@
-Auto Scaling Group without ELB example
+Auto Scaling Group: Disabled
 ======================================
 
-Configuration in this directory creates Launch Configuration and Auto Scaling Group.
+Configuration in this directory run with the module disabled.
 
-Data sources are used to discover existing VPC resources (VPC, subnet and security group) as well as AMI details.
+The module should create nothing and not error on any of the outputs
 
 Usage
 =====
