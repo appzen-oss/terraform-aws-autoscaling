@@ -1,20 +1,18 @@
-provider "aws" {
-  region = "us-west-2"
-}
-
 ##############################################################
 # Data sources to get VPC, subnets and security group details
 ##############################################################
-data "aws_vpc" "default" {
-  default = true
+data "aws_vpc" "vpc" {
+  tags {
+    Env = "${var.environment}"
+  }
 }
 
 data "aws_subnet_ids" "all" {
-  vpc_id = "${data.aws_vpc.default.id}"
+  vpc_id = "${data.aws_vpc.vpc.id}"
 }
 
 data "aws_security_group" "default" {
-  vpc_id = "${data.aws_vpc.default.id}"
+  vpc_id = "${data.aws_vpc.vpc.id}"
   name   = "default"
 }
 
@@ -44,7 +42,8 @@ data "aws_ami" "amazon_linux" {
 module "example_asg" {
   source = "../../"
 
-  name = "example-with-elb"
+  name        = "example-with-elb"
+  environment = "${var.environment}"
 
   # Launch configuration
   #
@@ -82,7 +81,7 @@ module "example_asg" {
   desired_capacity          = 1
   wait_for_capacity_timeout = 0
 
-  tags = [
+  tags_ag = [
     {
       key                 = "Environment"
       value               = "dev"
