@@ -5,17 +5,32 @@ variable "attributes" {
   default     = []
 }
 
+variable "component" {
+  description = "TAG: Underlying, dedicated piece of service (Cache, DB, ...)"
+  type        = "string"
+  default     = "UNDEF-ASG"
+}
+
 variable "delimiter" {
   description = "Delimiter to be used between `name`, `namespaces`, `attributes`, etc."
+  type        = "string"
   default     = "-"
 }
 
 variable "environment" {
   description = "Environment (ex: `dev`, `qa`, `stage`, `prod`). (Second or top level namespace. Depending on namespacing options)"
+  type        = "string"
+}
+
+variable "monitor" {
+  description = "TAG: Should resource be monitored"
+  type        = "string"
+  default     = "UNDEF-ASG"
 }
 
 variable "name" {
-  description = "Base name for resources"
+  description = "Base name for resource"
+  type        = "string"
 }
 
 variable "namespace-env" {
@@ -29,14 +44,39 @@ variable "namespace-org" {
 }
 
 variable "organization" {
-  description = "Organization name (Top level namespace)."
+  description = "Organization name (Top level namespace)"
+  type        = "string"
   default     = ""
+}
+
+variable "owner" {
+  description = "TAG: Owner of the service"
+  type        = "string"
+  default     = "UNDEF-ASG"
+}
+
+variable "product" {
+  description = "TAG: Company/business product"
+  type        = "string"
+  default     = "UNDEF-ASG"
+}
+
+variable "service" {
+  description = "TAG: Application (microservice) name"
+  type        = "string"
+  default     = "UNDEF-ASG"
 }
 
 variable "tags" {
   description = "A map of additional tags"
   type        = "map"
   default     = {}
+}
+
+variable "team" {
+  description = "TAG: Department/team of people responsible for service"
+  type        = "string"
+  default     = "UNDEF-ASG"
 }
 
 // Variables specific to this module
@@ -81,7 +121,7 @@ variable "associate_public_ip_address" {
 
 variable "user_data" {
   description = "The user data to provide when launching the instance"
-  default     = ""
+  default     = " "
 }
 
 variable "enable_monitoring" {

@@ -20,15 +20,21 @@ module "enabled" {
 # Define composite variables for resources
 module "label" {
   source        = "devops-workflow/label/local"
-  version       = "0.1.3"
-  organization  = "${var.organization}"
+  version       = "0.2.0"
+  attributes    = "${var.attributes}"
+  component     = "${var.component}"
+  delimiter     = "${var.delimiter}"
+  environment   = "${var.environment}"
+  monitor       = "${var.monitor}"
   name          = "${var.name}"
   namespace-env = "${var.namespace-env}"
   namespace-org = "${var.namespace-org}"
-  environment   = "${var.environment}"
-  delimiter     = "${var.delimiter}"
-  attributes    = "${var.attributes}"
+  organization  = "${var.organization}"
+  owner         = "${var.owner}"
+  product       = "${var.product}"
+  service       = "${var.service}"
   tags          = "${var.tags}"
+  team          = "${var.team}"
 }
 
 #######################
@@ -112,8 +118,15 @@ resource "aws_autoscaling_group" "this" {
 
   tags = ["${ concat(
     list(
-      map("key", "Name", "value", module.label.id, "propagate_at_launch", true),
+      map("key", "Component", "value", var.component, "propagate_at_launch", true),
       map("key", "Environment", "value", module.label.environment, "propagate_at_launch", true),
+      map("key", "Monitor", "value", var.monitor, "propagate_at_launch", true),
+      map("key", "Name", "value", module.label.id, "propagate_at_launch", true),
+      map("key", "Organization", "value", var.organization, "propagate_at_launch", true),
+      map("key", "Owner", "value", var.owner, "propagate_at_launch", true),
+      map("key", "Product", "value", var.product, "propagate_at_launch", true),
+      map("key", "Service", "value", var.service, "propagate_at_launch", true),
+      map("key", "Team", "value", var.team, "propagate_at_launch", true),
       map("key", "Terraform", "value", "true", "propagate_at_launch", true)
     ),
     var.tags_ag
