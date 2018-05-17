@@ -93,11 +93,7 @@ module "example" {
   desired_capacity          = 1
   wait_for_capacity_timeout = 0
 
-  tags_ag = [
-    {
-      key                 = "Project"
-      value               = "megasecret"
-      propagate_at_launch = true
-    },
-  ]
+  tags = {
+    Project = "megasecret"
+  }
 }

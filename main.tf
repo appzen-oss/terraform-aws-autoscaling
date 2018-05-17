@@ -20,7 +20,7 @@ module "enabled" {
 # Define composite variables for resources
 module "label" {
   source        = "devops-workflow/label/local"
-  version       = "0.2.0"
+  version       = "0.2.1"
   attributes    = "${var.attributes}"
   component     = "${var.component}"
   delimiter     = "${var.delimiter}"
@@ -35,6 +35,21 @@ module "label" {
   service       = "${var.service}"
   tags          = "${var.tags}"
   team          = "${var.team}"
+}
+
+# Terraform converts true to 1. Can it be prevented?
+data "null_data_source" "tags_asg" {
+  count = "${module.enabled.value ? length(keys(module.label.tags)) : 0}"
+
+  inputs = "${map(
+    "key", "${element(keys(module.label.tags), count.index)}",
+    "value", "${element(values(module.label.tags), count.index)}",
+    "propagate_at_launch", "true"
+  )}"
+}
+
+locals {
+  tags_asg = ["${data.null_data_source.tags_asg.*.outputs}"]
 }
 
 #######################
@@ -111,26 +126,11 @@ resource "aws_autoscaling_group" "this" {
   placement_group           = "${var.placement_group}"
   protect_from_scale_in     = "${var.protect_from_scale_in}"
   suspended_processes       = "${var.suspended_processes}"
+  tags                      = ["${local.tags_asg}"]
   target_group_arns         = ["${var.target_group_arns}"]
   termination_policies      = "${var.termination_policies}"
   wait_for_capacity_timeout = "${var.wait_for_capacity_timeout}"
   wait_for_elb_capacity     = "${var.wait_for_elb_capacity}"
-
-  tags = ["${ concat(
-    list(
-      map("key", "Component", "value", var.component, "propagate_at_launch", true),
-      map("key", "Environment", "value", module.label.environment, "propagate_at_launch", true),
-      map("key", "Monitor", "value", var.monitor, "propagate_at_launch", true),
-      map("key", "Name", "value", module.label.id, "propagate_at_launch", true),
-      map("key", "Organization", "value", var.organization, "propagate_at_launch", true),
-      map("key", "Owner", "value", var.owner, "propagate_at_launch", true),
-      map("key", "Product", "value", var.product, "propagate_at_launch", true),
-      map("key", "Service", "value", var.service, "propagate_at_launch", true),
-      map("key", "Team", "value", var.team, "propagate_at_launch", true),
-      map("key", "Terraform", "value", "true", "propagate_at_launch", true)
-    ),
-    var.tags_ag
-  )}"]
 
   lifecycle {
     create_before_destroy = true

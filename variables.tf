@@ -261,11 +261,6 @@ variable "protect_from_scale_in" {
   default     = false
 }
 
-variable "tags_ag" {
-  description = "Additional tags for Autoscaling group. A list of tag blocks. Each element is a map with key, value, and propagate_at_launch."
-  default     = []
-}
-
 variable "vpc_zone_identifier" {
   description = "A list of subnet IDs to launch resources in"
   type        = "list"

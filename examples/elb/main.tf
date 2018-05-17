@@ -7,8 +7,17 @@ data "aws_vpc" "vpc" {
   }
 }
 
-data "aws_subnet_ids" "all" {
+data "aws_subnet_ids" "private_subnet_ids" {
   vpc_id = "${data.aws_vpc.vpc.id}"
+
+  tags {
+    Network = "Private"
+  }
+}
+
+data "aws_subnet" "private_subnets" {
+  count = "${length(data.aws_subnet_ids.private_subnet_ids.ids)}"
+  id    = "${data.aws_subnet_ids.private_subnet_ids.ids[count.index]}"
 }
 
 data "aws_security_group" "default" {
@@ -74,36 +83,30 @@ module "example_asg" {
 
   # Auto scaling group
   asg_name                  = "example-asg"
-  vpc_zone_identifier       = ["${data.aws_subnet_ids.all.ids}"]
+  vpc_zone_identifier       = ["${data.aws_subnet_ids.private_subnet_ids.ids}"]
   health_check_type         = "EC2"
   min_size                  = 0
   max_size                  = 1
   desired_capacity          = 1
   wait_for_capacity_timeout = 0
 
-  tags_ag = [
-    {
-      key                 = "Environment"
-      value               = "dev"
-      propagate_at_launch = true
-    },
-    {
-      key                 = "Project"
-      value               = "megasecret"
-      propagate_at_launch = true
-    },
-  ]
+  tags = {
+    Environment = "dev"
+    Project     = "megasecret"
+  }
 }
 
+# TODO: Convert to lb module
 ######
 # ELB
 ######
 module "elb" {
-  source = "terraform-aws-modules/elb/aws"
+  source  = "terraform-aws-modules/elb/aws"
+  version = "1.2.0"
 
   name = "elb-example"
 
-  subnets         = ["${data.aws_subnet_ids.all.ids}"]
+  subnets         = ["${data.aws_subnet_ids.private_subnet_ids.ids}"]
   security_groups = ["${data.aws_security_group.default.id}"]
   internal        = false
 
