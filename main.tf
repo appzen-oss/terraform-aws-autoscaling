@@ -59,26 +59,24 @@ resource "aws_launch_configuration" "this" {
   count = "${module.enabled.value && var.launch_configuration == "" ? 1 : 0 }"
 
   name_prefix                 = "${coalesce(var.lc_name, module.label.id)}-"
-  image_id                    = "${var.image_id}"
-  instance_type               = "${var.instance_type}"
-  iam_instance_profile        = "${var.iam_instance_profile}"
-  key_name                    = "${var.key_name}"
-  security_groups             = ["${var.security_groups}"]
   associate_public_ip_address = "${var.associate_public_ip_address}"
-  user_data                   = "${var.user_data}"
-  enable_monitoring           = "${var.enable_monitoring}"
-  placement_tenancy           = "${var.placement_tenancy}"
   ebs_block_device            = "${var.ebs_block_device}"
   ebs_optimized               = "${var.ebs_optimized}"
+  enable_monitoring           = "${var.enable_monitoring}"
   ephemeral_block_device      = "${var.ephemeral_block_device}"
+  iam_instance_profile        = "${var.iam_instance_profile}"
+  image_id                    = "${var.image_id}"
+  instance_type               = "${var.instance_type}"
+  key_name                    = "${var.key_name}"
+  placement_tenancy           = "${var.spot_price == "0" ? var.placement_tenancy : ""}"
   root_block_device           = "${var.root_block_device}"
+  security_groups             = ["${var.security_groups}"]
+  spot_price                  = "${var.spot_price == "0" ? "" : var.spot_price}"
+  user_data                   = "${var.user_data}"
 
   lifecycle {
     create_before_destroy = true
   }
-
-  #spot_price      = "${var.spot_price == "0" ? "" : var.spot_price}"
-  # spot_price                  = "${var.spot_price}"  // placement_tenancy does not work with spot_price
 }
 
 /*

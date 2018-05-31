@@ -92,6 +92,7 @@ module "example" {
   max_size                  = 1
   desired_capacity          = 1
   wait_for_capacity_timeout = 0
+  #spot_price                = "0.5"
 
   tags = {
     Project = "megasecret"
