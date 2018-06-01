@@ -37,7 +37,7 @@ module "label" {
   team          = "${var.team}"
 }
 
-# Terraform converts true to 1. Can it be prevented?
+# NOTE: Terraform converts true to 1.
 data "null_data_source" "tags_asg" {
   count = "${module.enabled.value ? length(keys(module.label.tags)) : 0}"
 
