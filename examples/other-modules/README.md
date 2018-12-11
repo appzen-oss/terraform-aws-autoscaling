@@ -5,7 +5,6 @@ that use this module.
 
 These can also serve as more examples
 
-
 | Name | GitHub Repo | Terraform Registry |
 |-----|-----|-----|
-| ecs-cluster | [Repo](https://github.com/devops-workflow/terraform-aws-ecs-cluster) | [Registry]() |
+| ecs-cluster | [Repo](https://github.com/devops-workflow/terraform-aws-ecs-cluster) | [Registry](https://registry.terraform.io/modules/devops-workflow/ecs-cluster/aws) |

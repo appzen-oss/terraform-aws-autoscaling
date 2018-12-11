@@ -1,7 +1,7 @@
+# AWS Auto Scaling Group (ASG) Terraform module
+
 [![CircleCI](https://circleci.com/gh/devops-workflow/terraform-aws-autoscaling/tree/master.svg?style=svg)](https://circleci.com/gh/devops-workflow/terraform-aws-autoscaling/tree/master)
 [![Github release](https://img.shields.io/github/release/devops-workflow/terraform-aws-autoscaling.svg)](https://github.com/devops-workflow/terraform-aws-autoscaling/releases)
-
-# AWS Auto Scaling Group (ASG) Terraform module
 
 Terraform module which creates Auto Scaling resources on AWS.
 
@@ -71,20 +71,27 @@ module "asg" {
 
 ## Conditional creation
 
-Normally this module creates both Auto Scaling Group (ASG) and Launch Configuration (LC), and connect them together.
-It is possible to customize this behaviour passing different parameters to this module:
+Normally this module creates both Auto Scaling Group (ASG) and Launch
+Configuration (LC), and connect them together. It is possible to customize
+this behaviour passing different parameters to this module:
+
 1. To create ASG, but not LC. Associate ASG with an existing LC:
+
 ```hcl
 create_lc = false
 launch_configuration = "existing-launch-configuration"
 ```
 
 1. To create LC, but not ASG. Outputs may produce errors.
+
 ```hcl
 create_asg = false
 ```
 
-1. To disable creation of both resources (LC and ASG) you can specify both arguments `create_lc = false` and `create_asg = false`. Sometimes you need to use this way to create resources in modules conditionally but Terraform does not allow to use `count` inside `module` block.
+1. To disable creation of both resources (LC and ASG) you can specify both
+arguments `create_lc = false` and `create_asg = false`. Sometimes you need
+to use this way to create resources in modules conditionally but Terraform
+does not allow to use `count` inside `module` block.
 
 ## Examples
 
