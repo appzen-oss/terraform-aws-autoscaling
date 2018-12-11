@@ -98,6 +98,7 @@ create_asg = false
 ## Authors
 
 This fork managed by [Steven Nemetz](ttps://github.com/snemetz)
+
 Upstream module managed by [Anton Babenko](https://github.com/antonbabenko).
 
 ## License
